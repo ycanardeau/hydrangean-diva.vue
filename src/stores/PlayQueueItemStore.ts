@@ -1,5 +1,4 @@
 import { PlayerType } from '@aigamo/nostalgic-diva';
-import { action, makeObservable, observable } from 'mobx';
 
 export interface PlayQueueItemDto {
 	readonly url: string;
@@ -12,7 +11,7 @@ export class PlayQueueItemStore {
 	private static nextId = 1;
 
 	readonly id: number;
-	@observable isSelected = false;
+	isSelected = false;
 
 	constructor(
 		readonly url: string,
@@ -20,8 +19,6 @@ export class PlayQueueItemStore {
 		readonly videoId: string,
 		readonly title: string,
 	) {
-		makeObservable(this);
-
 		this.id = PlayQueueItemStore.nextId++;
 	}
 
@@ -34,11 +31,11 @@ export class PlayQueueItemStore {
 		);
 	}
 
-	@action unselect(): void {
+	unselect(): void {
 		this.isSelected = false;
 	}
 
-	@action.bound toggleSelected(): void {
+	toggleSelected(): void {
 		this.isSelected = !this.isSelected;
 	}
 

@@ -22,7 +22,10 @@ const jsonSchemaValidator = (): PluginOption => {
 
 			try {
 				const schemaPath = join(schemas, schemaFile);
-				const schemaJson = await fs.promises.readFile(schemaPath, 'utf8');
+				const schemaJson = await fs.promises.readFile(
+					schemaPath,
+					'utf8',
+				);
 				const schema = JSON.parse(schemaJson);
 
 				const ajv = new Ajv({
@@ -49,6 +52,14 @@ export default defineConfig({
 			'@': resolve(__dirname, './src'),
 		},
 	},
-	plugins: [vue()],
+	plugins: [
+		vue({
+			template: {
+				compilerOptions: {
+					isCustomElement: (tag) => ['nostalgic-diva'].includes(tag),
+				},
+			},
+		}),
+	],
 	server: {},
 });
