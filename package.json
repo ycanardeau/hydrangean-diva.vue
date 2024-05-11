@@ -9,6 +9,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@aigamo/nostalgic-diva": "^1.14.2",
 		"@aigamo/route-sphere": "^2.0.2",
 		"ajv": "^8.12.0",
 		"lodash-es": "^4.17.21",
