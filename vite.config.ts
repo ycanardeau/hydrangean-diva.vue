@@ -62,4 +62,7 @@ export default defineConfig({
 		}),
 	],
 	server: {},
+	// https://www.asobou.co.jp/blog/web/github-pages
+	base:
+		process.env.NODE_ENV === 'production' ? '/hydrangean-diva.vue/' : './',
 });
