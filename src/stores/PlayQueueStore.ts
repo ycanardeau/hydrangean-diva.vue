@@ -175,7 +175,7 @@ export class PlayQueueStore
 		this.items = value;
 	}
 
-	private interact(): void {
+	interact(): void {
 		this.interacted = true;
 	}
 
