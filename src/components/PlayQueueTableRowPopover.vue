@@ -17,50 +17,19 @@ const toggle = (event: MouseEvent): void => {
 	menu.value.toggle(event);
 };
 
-const handleClickPlayFirst = async (): Promise<void> => {
-	await props.playQueueStore.playFirst([props.item.clone()]);
-};
-
-const handleClickPlayNext = async (): Promise<void> => {
-	await props.playQueueStore.playNext([props.item.clone()]);
-};
-
-const handleClickAddToPlayQueue = async (): Promise<void> => {
-	await props.playQueueStore.addItems([props.item.clone()]);
-};
-
-const handleClickMoveToTop = (): void => {
-	props.playQueueStore.moveItem(props.item, 0);
-};
-
-const handleClickMoveToBottom = (): void => {
-	props.playQueueStore.moveItem(
-		props.item,
-		props.playQueueStore.items.length - 1,
-	);
-};
-
-const handleClickRemoveToTop = (): void => {
-	props.playQueueStore.removeItemsAbove(props.item);
-};
-
-const handleClickRemoveOthers = (): void => {
-	props.playQueueStore.removeOtherItems(props.item);
-};
-
 const items = ref<MenuItem[]>([
 	{
 		label: 'Play first',
-		command: handleClickPlayFirst,
+		command: () => props.item.playFirst(),
 	},
 	{
 		label: 'Play next',
-		command: handleClickPlayNext,
+		command: () => props.item.playNext(),
 	},
 	{
 		label: 'Add to play queue',
 		icon: 'pi pi-plus',
-		command: handleClickAddToPlayQueue,
+		command: () => props.item.addToPlayQueue(),
 	},
 	{
 		separator: true,
@@ -68,23 +37,27 @@ const items = ref<MenuItem[]>([
 	{
 		label: 'Move to the top',
 		icon: 'pi pi-arrow-up',
-		command: handleClickMoveToTop,
+		command: () => props.item.moveToTop(),
+		disabled: () => !props.item.canMoveToTop,
 	},
 	{
 		label: 'Move to the bottom',
 		icon: 'pi pi-arrow-down',
-		command: handleClickMoveToBottom,
+		command: () => props.item.moveToBottom(),
+		disabled: () => !props.item.canMoveToBottom,
 	},
 	{
 		separator: true,
 	},
 	{
 		label: 'Remove to the top',
-		command: handleClickRemoveToTop,
+		command: () => props.item.removeToTop(),
+		disabled: () => !props.item.canRemoveToTop,
 	},
 	{
 		label: 'Remove others',
-		command: handleClickRemoveOthers,
+		command: () => props.item.removeOthers(),
+		disabled: () => !props.item.canRemoveOthers,
 	},
 ]);
 </script>

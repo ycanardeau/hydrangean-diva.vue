@@ -36,13 +36,14 @@ const handleSave = async (e: { url: string; title: string }): Promise<void> => {
 			const jsonData = await response.json();
 
 			props.playQueueStore.addItems([
-				new PlayQueueItemStore(
-					e.url,
-					videoService.type,
-					videoId,
-					e.title ||
+				props.playQueueStore.createItem({
+					url: e.url,
+					type: videoService.type,
+					videoId: videoId,
+					title:
+						e.title ||
 						(isNoembedResult(jsonData) ? jsonData.title : videoId),
-				),
+				}),
 			]);
 		}
 	}

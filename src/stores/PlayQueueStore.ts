@@ -79,6 +79,10 @@ export class PlayQueueStore
 	repeat = RepeatMode.Off;
 	shuffle = false;
 
+	createItem(dto: PlayQueueItemDto): PlayQueueItemStore {
+		return PlayQueueItemStore.fromDto(this, dto);
+	}
+
 	get localStorageState(): PlayQueueLocalStorageState {
 		return {
 			version: '1.0',
@@ -91,7 +95,7 @@ export class PlayQueueStore
 	set localStorageState(value: PlayQueueLocalStorageState) {
 		this.repeat = value.repeat ?? RepeatMode.Off;
 		this.shuffle = value.shuffle ?? false;
-		this.items = value.items?.map(PlayQueueItemStore.fromDto) ?? [];
+		this.items = value.items?.map((item) => this.createItem(item)) ?? [];
 		this.currentIndex = value.currentIndex;
 	}
 

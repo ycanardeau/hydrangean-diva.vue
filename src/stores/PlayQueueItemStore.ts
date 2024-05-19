@@ -1,3 +1,4 @@
+import { PlayQueueStore } from '@/stores/PlayQueueStore';
 import { PlayerType } from '@aigamo/nostalgic-diva';
 
 export interface PlayQueueItemDto {
@@ -14,6 +15,7 @@ export class PlayQueueItemStore {
 	isSelected = false;
 
 	constructor(
+		readonly playQueueStore: PlayQueueStore,
 		readonly url: string,
 		readonly type: PlayerType,
 		readonly videoId: string,
@@ -22,8 +24,12 @@ export class PlayQueueItemStore {
 		this.id = PlayQueueItemStore.nextId++;
 	}
 
-	static fromDto(dto: PlayQueueItemDto): PlayQueueItemStore {
+	static fromDto(
+		playQueueStore: PlayQueueStore,
+		dto: PlayQueueItemDto,
+	): PlayQueueItemStore {
 		return new PlayQueueItemStore(
+			playQueueStore,
 			dto.url,
 			dto.type,
 			dto.videoId,
@@ -31,12 +37,36 @@ export class PlayQueueItemStore {
 		);
 	}
 
-	unselect(): void {
-		this.isSelected = false;
+	get isCurrent(): boolean {
+		return this.playQueueStore.currentItem === this;
 	}
 
-	toggleSelected(): void {
-		this.isSelected = !this.isSelected;
+	get index(): number {
+		return this.playQueueStore.items.indexOf(this);
+	}
+
+	get isFirst(): boolean {
+		return this.index === 0;
+	}
+
+	get isLast(): boolean {
+		return this.index === this.playQueueStore.items.length - 1;
+	}
+
+	get canMoveToTop(): boolean {
+		return !this.isFirst;
+	}
+
+	get canMoveToBottom(): boolean {
+		return !this.isLast;
+	}
+
+	get canRemoveToTop(): boolean {
+		return !this.isFirst;
+	}
+
+	get canRemoveOthers(): boolean {
+		return this.playQueueStore.hasMultipleItems;
 	}
 
 	toDto(): PlayQueueItemDto {
@@ -49,6 +79,53 @@ export class PlayQueueItemStore {
 	}
 
 	clone(): PlayQueueItemStore {
-		return PlayQueueItemStore.fromDto(this.toDto());
+		return this.playQueueStore.createItem(this.toDto());
+	}
+
+	unselect(): void {
+		this.isSelected = false;
+	}
+
+	toggleSelected(): void {
+		this.isSelected = !this.isSelected;
+	}
+
+	play(): void {
+		this.playQueueStore.setCurrentItem(this);
+	}
+
+	remove(): void {
+		this.playQueueStore.removeItems([this]);
+	}
+
+	async playFirst(): Promise<void> {
+		await this.playQueueStore.playFirst([this.clone()]);
+	}
+
+	async playNext(): Promise<void> {
+		await this.playQueueStore.playNext([this.clone()]);
+	}
+
+	async addToPlayQueue(): Promise<void> {
+		await this.playQueueStore.addItems([this.clone()]);
+	}
+
+	moveToTop(): void {
+		this.playQueueStore.moveItem(this, 0);
+	}
+
+	moveToBottom(): void {
+		this.playQueueStore.moveItem(
+			this,
+			this.playQueueStore.items.length - 1,
+		);
+	}
+
+	removeToTop(): void {
+		this.playQueueStore.removeItemsAbove(this);
+	}
+
+	removeOthers(): void {
+		this.playQueueStore.removeOtherItems(this);
 	}
 }

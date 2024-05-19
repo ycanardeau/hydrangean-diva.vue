@@ -72,12 +72,12 @@ const props = defineProps<{
 					<Button
 						icon="pi pi-play"
 						label="Play"
-						@click="playQueueStore.setCurrentItem(data)"
+						@click="data.play()"
 					/>
 					<Button
 						icon="pi pi-times"
 						label="Remove"
-						@click="playQueueStore.removeItems([data])"
+						@click="data.remove()"
 					/>
 					<PlayQueueTableRowPopover
 						:play-queue-store="playQueueStore"
