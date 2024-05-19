@@ -19,6 +19,7 @@ const props = defineProps<{
 		@select-all-change="playQueueStore.allItemsSelected = $event.checked"
 		@row-select="$event.data.isSelected = true"
 		@row-unselect="$event.data.isSelected = false"
+		:row-class="(data) => (data.isCurrent ? 'p-highlight' : undefined)"
 	>
 		<template #header>
 			<div style="text-align: left">
