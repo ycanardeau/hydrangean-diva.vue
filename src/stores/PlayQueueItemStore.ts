@@ -24,19 +24,6 @@ export class PlayQueueItemStore {
 		this.id = PlayQueueItemStore.nextId++;
 	}
 
-	static fromDto(
-		playQueueStore: PlayQueueStore,
-		dto: PlayQueueItemDto,
-	): PlayQueueItemStore {
-		return new PlayQueueItemStore(
-			playQueueStore,
-			dto.url,
-			dto.type,
-			dto.videoId,
-			dto.title,
-		);
-	}
-
 	get isCurrent(): boolean {
 		return this.playQueueStore.currentItem === this;
 	}

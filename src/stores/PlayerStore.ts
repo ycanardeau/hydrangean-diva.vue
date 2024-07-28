@@ -1,19 +1,9 @@
-import { PlayQueueStore } from '@/stores/PlayQueueStore';
 import { TimeEvent } from '@aigamo/nostalgic-diva';
 
 export class PlayerStore {
-	readonly playQueueStore = new PlayQueueStore();
 	playing = false;
 	percent = 0;
 	seeking = false;
-
-	get canPlay(): boolean {
-		return this.playQueueStore.canPlay;
-	}
-
-	get canPause(): boolean {
-		return this.playQueueStore.canPause;
-	}
 
 	setPlaying(value: boolean): void {
 		this.playing = value;

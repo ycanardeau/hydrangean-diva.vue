@@ -1,3 +1,4 @@
+import { PlayQueueItemStoreFactory } from '@/factories/PlayQueueItemStoreFactory';
 import { getOrAddSchema } from '@/stores/getOrAddSchema';
 import { LocalStorageStateStore } from '@aigamo/route-sphere';
 import { JSONSchemaType } from 'ajv';
@@ -79,8 +80,18 @@ export class PlayQueueStore
 	repeat = RepeatMode.Off;
 	shuffle = false;
 
+	constructor(
+		readonly playQueueItemStoreFactory: PlayQueueItemStoreFactory,
+	) {}
+
 	createItem(dto: PlayQueueItemDto): PlayQueueItemStore {
-		return PlayQueueItemStore.fromDto(this, dto);
+		return this.playQueueItemStoreFactory.create(
+			this,
+			dto.url,
+			dto.type,
+			dto.videoId,
+			dto.title,
+		);
 	}
 
 	get localStorageState(): PlayQueueLocalStorageState {
