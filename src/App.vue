@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import HydrangeanDiva from '@/components/HydrangeanDiva.vue';
-import { PlayQueueItemStoreFactory } from '@/factories/PlayQueueItemStoreFactory';
-import { PlayQueueStoreFactory } from '@/factories/PlayQueueStoreFactory';
-import { PlayerStoreFactory } from '@/factories/PlayerStoreFactory';
+import { ObservableStateProvider } from '@/stores/ObservableStateProvider';
+import { PlayQueueStore } from '@/stores/PlayQueueStore';
 import { PlayerStore } from '@/stores/PlayerStore';
 import { ref } from 'vue';
 
-const playerStoreFactory = new PlayerStoreFactory();
-const playQueueItemStoreFactory = new PlayQueueItemStoreFactory();
-const playQueueStoreFactory = new PlayQueueStoreFactory(
-	playQueueItemStoreFactory,
-);
+const observableStateProvider = new ObservableStateProvider();
 
-const playerStore = ref(playerStoreFactory.create());
-const playQueueStore = ref(playQueueStoreFactory.create());
+const playerStore = ref(new PlayerStore(observableStateProvider));
+const playQueueStore = ref(new PlayQueueStore(observableStateProvider));
 </script>
 
 <template>

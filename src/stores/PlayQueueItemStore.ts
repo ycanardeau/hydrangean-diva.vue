@@ -1,27 +1,76 @@
+import { IPlayQueueStore } from '@/stores/IIPlayQueueStore';
+import { IObservableStateProvider } from '@/stores/IObservableStateProvider';
+import {
+	IPlayQueueItemStore,
+	PlayQueueItemDto,
+} from '@/stores/IPlayQueueItemStore';
 import { PlayQueueStore } from '@/stores/PlayQueueStore';
 import { PlayerType } from '@aigamo/nostalgic-diva';
+import { action, computed, observable } from 'mobx';
 
-export interface PlayQueueItemDto {
-	readonly url: string;
-	readonly type: PlayerType;
-	readonly videoId: string;
-	readonly title: string;
-}
-
-export class PlayQueueItemStore {
+export class PlayQueueItemStore implements IPlayQueueItemStore {
 	static nextId = 1;
 
 	readonly id: number;
 	isSelected = false;
 
 	constructor(
-		readonly playQueueStore: PlayQueueStore,
-		readonly url: string,
-		readonly type: PlayerType,
-		readonly videoId: string,
-		readonly title: string,
+		readonly observableStateProvider: IObservableStateProvider,
+		readonly playQueueStore: IPlayQueueStore,
+		readonly dto: PlayQueueItemDto,
 	) {
 		this.id = PlayQueueItemStore.nextId++;
+
+		observableStateProvider.makeObservable(this, {
+			isSelected: observable,
+			isCurrent: computed,
+			index: computed,
+			isFirst: computed,
+			isLast: computed,
+			canMoveToTop: computed,
+			canMoveToBottom: computed,
+			canRemoveToTop: computed,
+			canRemoveOthers: computed,
+			unselect: action,
+			toggleSelected: action.bound,
+			play: action,
+			remove: action.bound,
+			playFirst: action.bound,
+			playNext: action.bound,
+			addToPlayQueue: action.bound,
+			moveToTop: action.bound,
+			moveToBottom: action.bound,
+			removeToTop: action.bound,
+			removeOthers: action.bound,
+		});
+	}
+
+	static fromDto(
+		observableStateProvider: IObservableStateProvider,
+		playQueueStore: PlayQueueStore,
+		dto: PlayQueueItemDto,
+	): IPlayQueueItemStore {
+		return new PlayQueueItemStore(
+			observableStateProvider,
+			playQueueStore,
+			dto,
+		);
+	}
+
+	get url(): string {
+		return this.dto.url;
+	}
+
+	get type(): PlayerType {
+		return this.dto.type;
+	}
+
+	get videoId(): string {
+		return this.dto.videoId;
+	}
+
+	get title(): string {
+		return this.dto.title;
 	}
 
 	get isCurrent(): boolean {
@@ -56,17 +105,8 @@ export class PlayQueueItemStore {
 		return this.playQueueStore.hasMultipleItems;
 	}
 
-	toDto(): PlayQueueItemDto {
-		return {
-			url: this.url,
-			type: this.type,
-			videoId: this.videoId,
-			title: this.title,
-		};
-	}
-
-	clone(): PlayQueueItemStore {
-		return this.playQueueStore.createItem(this.toDto());
+	clone(): IPlayQueueItemStore {
+		return this.playQueueStore.createItem(this.dto);
 	}
 
 	unselect(): void {
