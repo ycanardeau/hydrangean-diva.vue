@@ -2,8 +2,9 @@
 import MoreOptionsPopover from '@/components/MoreOptionsPopover.vue';
 import SeekBar from '@/components/SeekBar.vue';
 import { useNostalgicDiva } from '@/components/useNostalgicDiva';
-import { PlayQueueStore, RepeatMode } from '@/stores/PlayQueueStore';
+import { PlayQueueStore } from '@/stores/PlayQueueStore';
 import { PlayerStore } from '@/stores/PlayerStore';
+import { RepeatMode } from '@/stores/RepeatMode';
 import Button from 'primevue/button';
 import Toolbar from 'primevue/toolbar';
 
